@@ -1,6 +1,5 @@
 
 // Comando para establecer la conexión
-
 var socket = io();
 
 var label = $('#lblNuevoTicket'); // Id de un elemento de html de nuevo-ticket.html

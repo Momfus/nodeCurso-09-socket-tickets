@@ -20,6 +20,7 @@ class TicketControl {
         this.hoy = new Date().getDate();
 
         this.tickets = []; // Todos los tickets pendientes de revisión (no han sido atendidos)
+        this.ultimos4 = [];
 
         let data = require('../data/data.json');
 
@@ -27,6 +28,7 @@ class TicketControl {
 
             this.ultimo = data.ultimo;
             this.tickets = data.tickets;
+            this.ultimos4 = data.ultimos4;
 
         } else {
 
@@ -55,11 +57,51 @@ class TicketControl {
 
     }
 
+    getUltimos4() {
+
+        return this.ultimos4;
+
+    }
+
+    atenderTicket( escritorio ) {
+
+
+        if( this.tickets.length === 0 ) {
+
+            return 'No hay tickets';
+
+        }
+
+        let numeroTicket = this.tickets[0].numero;
+        this.tickets.shift(); // Elimino el primer elemento
+
+        let atenderTicket = new Ticket( numeroTicket, escritorio );
+
+        this.ultimos4.unshift( atenderTicket ); // Agrega al inicio del arreglo
+
+        // Si el arreglo tien emas de 4, elimino el que saler
+        if( this.ultimos4.length > 4 )  {
+
+            this.ultimos4.splice(-1, 1); // Borra el último
+
+        }
+
+        console.log('Ultimos 4');
+        console.log(this.ultimos4);
+
+        this.grabarArchivo();
+
+        return atenderTicket; 
+        
+        
+
+    }
 
     reiniciarConteo() {
         
         this.ultimo = 0;
         this.tickets = [];
+        this.ultimos4 = [];
 
         console.log('Se ha inicializado el sistema');
         this.grabarArchivo();
@@ -73,7 +115,8 @@ class TicketControl {
 
             ultimo: this.ultimo,
             hoy: this.hoy,
-            tickets: this.tickets
+            tickets: this.tickets,
+            ultimos4: this.ultimos4
 
         };
 
