@@ -1,4 +1,3 @@
-
 // Comando para establecer la conexión
 var socket = io();
 
@@ -12,42 +11,35 @@ var lblEscritorio2 = $('#lblEscritorio2');
 var lblEscritorio3 = $('#lblEscritorio3');
 var lblEscritorio4 = $('#lblEscritorio4');
 
+
 var lblTickets = [lblTicket1, lblTicket2, lblTicket3, lblTicket4];
 var lblEscritorios = [lblEscritorio1, lblEscritorio2, lblEscritorio3, lblEscritorio4];
 
-
-// Señalar el estado de la conexión (opcional o para informar al front)
-socket.on( 'connect', function(){
-
-    console.log('Conectado al servidor');
-    
-
-});
-
-
-socket.on( 'disconnect', function() {
-
-    console.log('Desconectado del servidor');
-    
-
-});
-
-
 socket.on('estadoActual', function(data) {
 
-    console.log(data);
+    // console.log(data);
     actualizarHTML( data.ultimos4 );
 
 });
 
+// crear evento 'ultimos4'
+socket.on('ultimos4', function(data) {
+
+    // console.log(data);
+    // Nota: la reproducción del audio puede que en algunos navegadores no funcione
+    var audio = new Audio('audio/new-ticket.mp3');
+    audio.play();
+
+    actualizarHTML(data.ultimos4);
+
+});
+
+
 function actualizarHTML( ultimos4 ) {
 
-    if( ultimos4 != undefined ) {
-        for (var i = 0; i <= ultimos4.length - 1; i++) {
+    for (var i = 0; i <= ultimos4.length - 1; i++) {
 
-            lblTickets[i].text('Ticket ' + ultimos4[i].numero);
-            lblEscritorios[i].text('Escritorio ' + ultimos4[i].escritorio);
-
-        }
+        lblTickets[i].text('Ticket ' + ultimos4[i].numero);
+        lblEscritorios[i].text('Escritorio ' + ultimos4[i].escritorio);
     }
 }
